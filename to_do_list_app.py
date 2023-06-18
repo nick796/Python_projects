@@ -1,5 +1,7 @@
 from tkinter import *
 from tkinter import ttk
+import random
+import string
 
 
 class To_Do_List_App(Tk):
@@ -90,25 +92,24 @@ class To_Do_List_App(Tk):
         self.my_td_text.tag_remove("highlight", 1.0, "end")
         self.my_td_text.tag_add("highlight", line_index + "linestart",
                                 line_index + " lineend")
+        self.highlight_line2 = line_index
 
     def add_note(self):
         your_note = self.your_entry.get()
         self.counter += 1
-        line_number = str(self.counter) + "."
-        self.my_td_text.insert("end", line_number + " " + your_note + "\n")
+        line_number = str(self.counter)+"."
+        self.my_td_text.insert("end", line_number + " "+your_note + "\n")
 
     def toggle_strikethrough(self):
-        # Get the currently selected text range
-        sel_range = self.my_td_text.tag_ranges("sel")
 
-        if sel_range:
-            # Toggle the "strikethrough" tag for the selected range
-            if "strikethrough" in self.my_td_text.tag_names(sel_range[0]):
-                self.my_td_text.tag_remove(
-                    "strikethrough", sel_range[0], sel_range[1])
-            else:
-                self.my_td_text.tag_add(
-                    "strikethrough", sel_range[0], sel_range[1])
+        if self.highlight_line2:
+            line_index = self.highlight_line2 + ".0"
+            line_end = line_index + " lineend"
+            tags = self.my_td_text.tag_names(line_index)
+        if "highlight" in tags:
+            self.my_td_text.tag_add("strikethrough", line_index, line_end)
+        else:
+            self.my_td_text.tag_remove("highlight", line_index, line_end)
 
 
 if __name__ == '__main__':
