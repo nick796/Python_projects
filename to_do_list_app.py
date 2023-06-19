@@ -1,5 +1,7 @@
 from tkinter import *
 from tkinter import ttk
+from tkinter import Menu
+from tkinter import filedialog
 import random
 import string
 
@@ -16,8 +18,8 @@ class To_Do_List_App(Tk):
 
         self.is_strike = False
         # Calculate the x and y coordinates to center the window
-        x = (screen_width - self.winfo_reqwidth()) // 2
-        y = (screen_height - self.winfo_reqheight()) // 3
+        x = (screen_width - self.winfo_reqwidth()) // 4
+        y = (screen_height - self.winfo_reqheight()) // 4
         self.geometry(f"+{x}+{y}")
 
         # Frames
@@ -55,6 +57,15 @@ class To_Do_List_App(Tk):
         self.my_frame_1.grid_rowconfigure(1, weight=1)
         self.my_frame_1.grid_rowconfigure(1, weight=1)
 
+        self.menu_bar = Menu(self)
+        self.config(menu=self.menu_bar)
+
+        self.file_menu = Menu(self.menu_bar)
+        self.menu_bar.add_cascade(label="Options", menu=self.file_menu)
+
+        self.file_menu.add_command(
+            label="New_To_Do_List", command=self.new_List)
+        self.file_menu.add_command(label="Exit", command=self.quit)
         # text
         self.my_td_text = Text(self)
         self.my_td_text.grid(row=1, column=1, sticky="s")
@@ -63,6 +74,20 @@ class To_Do_List_App(Tk):
         # Tag Configure
         self.my_td_text.tag_configure("highlight", background="#dda15e")
         self.my_td_text.tag_configure("strikethrough", overstrike=True)
+
+    def save_the_list(self):
+        self.text = self.my_td_text.get("1.0", "end-1c")
+        self.lines = self.text.split("\n")
+        self.file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[
+                                                      ("*.txt ", "*.txt"), ("Pdf Files ", "*.pdf")])
+        if self.file_path:
+            with open(self.file_path, "w") as f:
+                f.write("\n".join(self.lines))
+
+    def new_List(self):
+        self.destroy()
+        new_window = To_Do_List_App()
+        new_window.mainloop()
 
     def create_labels(self):
         self.your_task_label = ttk.Label(
@@ -81,7 +106,7 @@ class To_Do_List_App(Tk):
         self.add_button.grid(row=1, column=1, sticky="w")
 
         self.save_button = ttk.Button(
-            self, text="Save", style="Custom.TButton")
+            self, text="Save", style="Custom.TButton", command=self.save_the_list)
         self.save_button.grid(row=2, column=0)
 
         self.delete_button = ttk.Button(
