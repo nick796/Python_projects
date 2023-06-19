@@ -13,6 +13,8 @@ class To_Do_List_App(Tk):
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
         self.counter = 0
+
+        self.is_strike = False
         # Calculate the x and y coordinates to center the window
         x = (screen_width - self.winfo_reqwidth()) // 2
         y = (screen_height - self.winfo_reqheight()) // 3
@@ -102,14 +104,14 @@ class To_Do_List_App(Tk):
 
     def toggle_strikethrough(self):
 
-        if self.highlight_line2:
-            line_index = self.highlight_line2 + ".0"
-            line_end = line_index + " lineend"
-            tags = self.my_td_text.tag_names(line_index)
-        if "highlight" in tags:
-            self.my_td_text.tag_add("strikethrough", line_index, line_end)
+        if (self.is_strike == True):
+            self.my_td_text.tag_remove("strikethrough",  self.highlight_line2 + "linestart",
+                                       self.highlight_line2 + " lineend")
+            self.is_strike = False
         else:
-            self.my_td_text.tag_remove("highlight", line_index, line_end)
+            self.my_td_text.tag_add("strikethrough",  self.highlight_line2 + "linestart",
+                                    self.highlight_line2 + " lineend")
+            self.is_strike = True
 
 
 if __name__ == '__main__':
