@@ -4,6 +4,7 @@ from tkinter import Menu
 from tkinter import filedialog
 import sqlite3
 from add_student_class import add_student
+from db_config_class import db_config
 import random
 import string
 
@@ -67,17 +68,18 @@ class Student_log_App(Tk):
         self.add_student = ttk.Button(self.my_frame ,text="Προσθήκη Μαθητή",command=self.add_new_student,style="Custom.TButton")
         self.add_student.grid(row=1, column=0,sticky="we ",pady=5,padx=15 )
         
-        self.information = ttk.Button(self.my_frame ,text="Πληροφορίες Μαθητή",style="Custom.TButton",command=self.information)
+        self.information = ttk.Button(self.my_frame ,text="Βάση Δεδομένων",style="Custom.TButton",command=self.information)
         self.information.grid(row=2, column=0,sticky="we",pady=5 ,padx=15)
     
     def add_new_student(self):
         new_student_window = add_student()
     
     def information(self):
-        self.cursor.execute('SELECT * FROM students')
-        rows = self.cursor.fetchall()
-        for row in rows:
-            print(row)
+        data_base_db = db_config()
+        # self.cursor.execute('SELECT * FROM students')
+        # rows = self.cursor.fetchall()
+        # for row in rows:
+        #     print(row)
       
       
 if __name__ == '__main__':
