@@ -5,7 +5,7 @@ from tkinter import filedialog
 import random
 import string
 import sqlite3
-
+from tkinter import messagebox  
 
 class db_config(Toplevel):
     def __init__(self):
@@ -63,28 +63,29 @@ class db_config(Toplevel):
         self.connection.close()
     
     def delete_entry(self):
-        selected_item = self.treeview.selection()
-        if selected_item:
-            # Get the selected item's ID
-            item_id = self.treeview.item(selected_item)['text']
-            
-            # Connect to the database
-            self.database_connection = sqlite3.connect("students.db")
-            self.c = self.database_connection.cursor()
-            
-            # Delete the row from the table based on the ID
-            self.c.execute("DELETE FROM students WHERE ID=?", (item_id))
-            
-            # Commit the changes to the database
-            self.database_connection.commit()
-            
-            # Remove the selected item from the Treeview
-            self.treeview.delete(selected_item)
-            
-            # Close the database cursor
-            self.c.close()
-        else:
-            messagebox.showinfo("No Selection", "Please select an entry to delete.")
+      selected_item = self.treeview.selection()
+      if selected_item:
+        # Get the selected item's ID
+        item_id = self.treeview.item(selected_item)['text']
+
+        # Connect to the database
+        self.database_connection = sqlite3.connect("students.db")
+        self.c = self.database_connection.cursor()
+
+        # Delete the row from the table based on the ID
+        self.c.execute("DELETE FROM students WHERE ID=?", (item_id,))
+
+        # Commit the changes to the database
+        self.database_connection.commit()
+
+        # Remove the selected item from the Treeview
+        self.treeview.delete(selected_item)
+
+        # Close the database cursor and connection
+        self.c.close()
+        self.database_connection.close()
+      else:
+        messagebox.showinfo("No Selection", "Please select an entry to delete.")
             
 if __name__ == '__main__':
     app = db_config( )
