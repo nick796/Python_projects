@@ -23,6 +23,7 @@ class Question_app(Tk):
         # Read the csvs file
         with open('data.csv', 'r') as file:
             self.csv_data = list(csv.reader(file))
+            self.max_row_count = sum(1 for _ in self.csv_data)
 
         self.correct_answers = 0
         self.question_counter = 0
@@ -65,9 +66,9 @@ class Question_app(Tk):
 
         style_correct = ttk.Style()
         style_correct.configure("Correct.TButton", font=(
-            "Roboto slab", 13), foreground="#9FE2BF")
+            "Roboto slab", 13), foreground="#239B56")
         style_correct.map("Correct.TButton", foreground=[
-                          ("disabled", "#9FE2BF")])
+                          ("disabled", "#239B56")])
 
         style4 = ttk.Style()
         style4.configure("Custom.TFrame", background="#dda15e")
@@ -140,7 +141,8 @@ class Question_app(Tk):
     def update_stats(self):
         # self.text_panel.insert(
         #     "1.0", f"Question number: {self.question_counter}\n")
-        self.Stats_label.configure(text=f"Correct {self.correct_answers}/4")
+        self.Stats_label.configure(
+            text=f"Correct {self.correct_answers}/{self.max_row_count}")
 
 
 if __name__ == '__main__':
