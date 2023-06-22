@@ -3,7 +3,6 @@ from tkinter import ttk
 from tkinter import Menu
 from tkinter import filedialog
 import openpyxl
-import random
 import string
 import sqlite3
 from tkinter import messagebox  
