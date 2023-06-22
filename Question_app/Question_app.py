@@ -23,6 +23,7 @@ class Question_app(Tk):
         with open('data.csv', 'r') as file:
             self.csv_data = list(csv.reader(file))
 
+        self.correct_answers = 0
         # Styles
         style1 = ttk.Style()
         style1.configure("Custom.TLabel", font=(
@@ -41,8 +42,10 @@ class Question_app(Tk):
         self.text_panel.grid(row=0, column=0,
                              sticky="nwe", padx=20, pady=20)
 
-        self.button_yes = ttk.Button(self.my_frame1, text="Yes", command=self)
-        self.button_no = ttk.Button(self.my_frame1, text="No", command=self)
+        self.button_yes = ttk.Button(
+            self.my_frame1, text="Yes", command=self.yes_func)
+        self.button_no = ttk.Button(
+            self.my_frame1, text="No", command=self.no_func)
 
         self.button_yes.grid(row=0, column=0, sticky="we", padx=50, pady=10)
         self.button_no.grid(row=0, column=1, sticky="ew", padx=50, pady=10)
@@ -57,19 +60,37 @@ class Question_app(Tk):
         # Start the main thing
         self.start_question()
 
+    def yes_func(self):
+        if self.csv_data[self.random_row-1][1] == "Yes":
+            self.correct_answers += 1
+
+        self.csv_data.pop(self.random_row-1)
+        # print("New cvs: ", self.csv_data)
+        self.start_question()
+
+    def no_func(self):
+
+        if self.csv_data[self.random_row-1][1] == "No":
+            self.correct_answers += 1
+        self.csv_data.pop(self.random_row-1)
+
+        self.start_question()
+
     def start_question(self):
-        with open('data.csv', 'r') as file:
-            self.csv_data = list(csv.reader(file))
-            # print(self.csv_data)
-
+        self.update_stats()
+        self.text_panel.delete("1.0", END)
+        try:
             self.row_count = sum(1 for _ in self.csv_data)
-            random_row = random.randint(1, self.row_count)
-            # print("the random row to delete is: ", random_row)
+            self.random_row = random.randint(1, self.row_count)
+            self.text_panel.insert("1.0", self.csv_data[self.random_row-1][0])
+        except:
+            self.text_panel.insert("1.0", "The questions are finidhed")
+            self.button_no.state(["disabled"])
+            self.button_yes.state(["disabled"])
+         # print("the random row to delete is: ", random_row)
 
-            self.text_panel.insert("1.0", self.csv_data[random_row-1][0])
-
-            self.csv_data.pop(random_row-1)
-            # print("New cvs: ", self.csv_data)
+    def update_stats(self):
+        self.Stats_label.configure(text=f"Correct {self.correct_answers}/4")
 
 
 if __name__ == '__main__':
