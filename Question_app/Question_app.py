@@ -60,16 +60,16 @@ class Question_app(Tk):
     def start_question(self):
         with open('data.csv', 'r') as file:
             self.csv_data = list(csv.reader(file))
-            print(self.csv_data)
+            # print(self.csv_data)
 
             self.row_count = sum(1 for _ in self.csv_data)
             random_row = random.randint(1, self.row_count)
-            print("the random row to delete is: ", random_row)
+            # print("the random row to delete is: ", random_row)
 
             self.text_panel.insert("1.0", self.csv_data[random_row-1][0])
 
             self.csv_data.pop(random_row-1)
-            print("New cvs: ", self.csv_data)
+            # print("New cvs: ", self.csv_data)
 
 
 if __name__ == '__main__':
