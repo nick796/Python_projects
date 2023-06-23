@@ -86,6 +86,11 @@ class Question_app(Tk):
             self.my_frame2, text="30 Question", style="Custom.TButton", command=lambda: self.start_with_x_questios(30))
         self.button_30.grid(row=0, column=2)
 
+        # Start the fun
+        self.create_style()
+        self.start_question()
+
+    def create_style(self):
         # Styles
         style1 = ttk.Style()
         style1.configure("Custom.TLabel", font=(
@@ -106,9 +111,6 @@ class Question_app(Tk):
 
         style4 = ttk.Style()
         style4.configure("Custom.TFrame", background="#dda15e")
-
-        # Start the fun
-        self.start_question()
 
     def start_with_x_questios(self, number):
         self.the_game_has_started = True
