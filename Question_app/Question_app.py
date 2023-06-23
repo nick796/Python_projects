@@ -7,7 +7,7 @@ import time
 
 
 '''
-TODO: Give the user the option to select 10/20/30 questions ---- ✅ DONE
+TODO: Give the user the option to select 10/20/30 questions
 TODO: Have sectors for the question(Chapter1/2/3 etc)
 TODO: Polish and create_questions
 
@@ -40,6 +40,7 @@ class Question_app(Tk):
         self.question_counter = 0
 
         self.selected_questions_count = 0
+        self.the_game_has_started = False
         self.sampled_questions = []
 
         # Widgets Creation
@@ -53,9 +54,9 @@ class Question_app(Tk):
                              sticky="nwe", padx=20, pady=20)
 
         self.button_yes = ttk.Button(
-            self.my_frame1, text="Yes", style="Custom.TButton", command=self.yes_func)
+            self.my_frame1, text="Yes", style="Custom.TButton", command=lambda answer="Yes": self.answer_button(answer, self.button_yes, self.button_no))
         self.button_no = ttk.Button(
-            self.my_frame1, text="No", style="Custom.TButton", command=self.no_func)
+            self.my_frame1, text="No", style="Custom.TButton", command=lambda answer="No": self.answer_button(answer, self.button_no, self.button_yes))
 
         self.button_yes.grid(row=0, column=0, sticky="we", padx=50, pady=10)
         self.button_no.grid(row=0, column=1, sticky="ew", padx=50, pady=10)
@@ -110,6 +111,7 @@ class Question_app(Tk):
         self.start_question()
 
     def start_with_x_questios(self, number):
+        self.the_game_has_started = True
         with open('data.csv', 'r') as file:
             self.sampled_questions = random.sample(self.csv_data, number)
 
@@ -120,32 +122,17 @@ class Question_app(Tk):
         self.max_row_count = number
         self.start_question()
 
-    def yes_func(self):
+    def answer_button(self, answer, pressed_button, other_button):
         # Check if the answer is correct or not
-        if self.sampled_questions[self.random_row-1][1] == "Yes":
+        if (self.sampled_questions[self.random_row-1][1] == f"{answer}") and (pressed_button.cget("text") == f"{answer}"):
+
+            pressed_button.configure(style="Correct.TButton")
+            other_button.configure(style="Wrong.TButton")
             self.correct_answers += 1
-            self.button_yes.configure(style="Correct.TButton")
-            self.button_no.configure(style="Wrong.TButton")
-
         else:
-            self.button_yes.configure(style="Wrong.TButton")
-            self.button_no.configure(style="Correct.TButton")
-        self.button_yes.configure(state=DISABLED)
-        self.button_no.configure(state=DISABLED)
-        self.sampled_questions.pop(self.random_row-1)
+            pressed_button.configure(style="Wrong.TButton")
+            other_button.configure(style="Correct.TButton")
 
-        self.after(2000, self.start_question)
-
-    def no_func(self):
-        # Check if the answer is correct or not
-        if self.sampled_questions[self.random_row-1][1] == "No":
-            self.correct_answers += 1
-            self.button_yes.configure(style="Wrong.TButton")
-            self.button_no.configure(style="Correct.TButton")
-
-        else:
-            self.button_yes.configure(style="Correct.TButton")
-            self.button_no.configure(style="Wrong.TButton")
         self.button_yes.state(["disabled"])
         self.button_no.state(["disabled"])
         self.sampled_questions.pop(self.random_row-1)
@@ -171,11 +158,10 @@ class Question_app(Tk):
         except:
             self.button_no.state(["disabled"])
             self.button_yes.state(["disabled"])
-            if self.sampled_questions == []:
+            if self.the_game_has_started == False:
                 self.text_panel.insert(
                     "1.0", "\n Choose one of the three categories. Thanks")
-            else:
-
+            elif self.sampled_questions == []:
                 self.text_panel.insert("1.0", "\n The questions are finished\n" +
                                        f"You have a success rate of {self.correct_answers/self.max_row_count*100}%")
 
