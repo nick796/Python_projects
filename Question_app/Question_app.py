@@ -1,15 +1,16 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
+ 
 import csv
 import random
 import time
 
 
-'''
-TODO: Give the user the option to select 10/20/30 questions
-TODO: Have sectors for the question(Chapter1/2/3 etc)
-TODO: Polish and create_questions
+''' 
+TODO: Give the user the option to select 10/20/30 questions ✅ Done
+TODO: Have sectors for the question(Chapter1/2/3 etc) ⭕️ Abort no need for that
+TODO: Polish and create_questions ✅ Done
 
 TODO:(Optional) HighScore
 
@@ -30,7 +31,7 @@ class Question_app(Tk):
         x = (screen_width - self.winfo_reqwidth()) // 4
         y = (screen_height - self.winfo_reqheight()) // 10
         self.geometry(f"+{x}+{y}")
-
+        self.resizable(False,False)
         # Read the csvs file
         with open('data.csv', 'r') as file:
             self.csv_data = list(csv.reader(file))
@@ -46,9 +47,11 @@ class Question_app(Tk):
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
+        
         # Widgets Creation
-        self.create_text_panel()
+        
         self.create_frames()
+        self.create_text_panel()
         self.create_buttons()
         self.create_labels()
         self.create_style()
@@ -68,12 +71,14 @@ class Question_app(Tk):
         self.my_frame2.grid_columnconfigure(0, weight=1)
         self.my_frame2.grid_columnconfigure(1, weight=1)
         self.my_frame2.grid_columnconfigure(2, weight=1)
-
+        
+        self.my_frame_up =  ttk.Frame(self, style="Custom2.TFrame")
+        self.my_frame_up.grid(row=0, column=0, sticky="wesn")
+        
+        self.my_frame_up.grid_columnconfigure(0, weight=1)
+         
     def create_text_panel(self):
-        self.text_panel = Text(self, height=8, font=("Roboto slab", 12))
-        self.text_panel.grid(row=0, column=0,
-                             sticky="nwe", padx=20, pady=20)
-        self.text_panel = Text(self, height=8, font=("Roboto slab", 12))
+        self.text_panel = Text(self.my_frame_up, height=8, font=("Roboto slab", 14,"bold"),background="#81c3d7",foreground="#14110f")
         self.text_panel.grid(row=0, column=0,
                              sticky="nwe", padx=20, pady=20)
 
@@ -91,20 +96,20 @@ class Question_app(Tk):
         self.button_yes.grid(row=0, column=0, sticky="we", padx=50, pady=10)
         self.button_no.grid(row=0, column=1, sticky="ew", padx=50, pady=10)
         self.button_10 = ttk.Button(
-            self.my_frame2, text="10 Question", style="Custom.TButton", command=lambda: self.start_with_x_questios(10))
+            self.my_frame2, text="10 Questions", style="Custom.TButton", command=lambda: self.start_with_x_questios(10))
         self.button_10.grid(row=0, column=0)
         self.button_20 = ttk.Button(
-            self.my_frame2, text="20 Question", style="Custom.TButton", command=lambda: self.start_with_x_questios(20))
+            self.my_frame2, text="20 Questions", style="Custom.TButton", command=lambda: self.start_with_x_questios(20))
         self.button_20.grid(row=0, column=1)
         self.button_30 = ttk.Button(
-            self.my_frame2, text="30 Question", style="Custom.TButton", command=lambda: self.start_with_x_questios(30))
+            self.my_frame2, text="30 Questions", style="Custom.TButton", command=lambda: self.start_with_x_questios(30))
         self.button_30.grid(row=0, column=2)
 
     def create_style(self):
         # Styles
         style1 = ttk.Style()
         style1.configure("Custom.TLabel", font=(
-            "Roboto slab", 13), anchor=CENTER)
+            "Roboto slab", 13), anchor=CENTER, background ="#81c3d7")
         style2 = ttk.Style()
         style2.configure("Custom.TButton", font=("Roboto slab", 13))
 
@@ -121,6 +126,9 @@ class Question_app(Tk):
 
         style4 = ttk.Style()
         style4.configure("Custom.TFrame", background="#dda15e")
+        
+        style5 = ttk.Style()
+        style4.configure("Custom2.TFrame",background="#72ddf7")
 
     def start_with_x_questios(self, number):
         self.the_game_has_started = True
