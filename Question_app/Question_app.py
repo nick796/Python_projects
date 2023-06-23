@@ -7,7 +7,7 @@ import time
 
 
 '''
-TODO: Give the user the option to select 10/20/30 questions
+TODO: Give the user the option to select 10/20/30 questions ---- ✅ DONE
 TODO: Have sectors for the question(Chapter1/2/3 etc)
 TODO: Polish and create_questions
 
