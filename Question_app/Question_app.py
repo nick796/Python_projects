@@ -35,6 +35,7 @@ class Question_app(Tk):
         with open('data.csv', 'r') as file:
             self.csv_data = list(csv.reader(file))
             self.max_row_count = sum(1 for _ in self.csv_data)
+
         # Logs for the numbers
         self.correct_answers = 0
         self.question_counter = 0
@@ -43,31 +44,23 @@ class Question_app(Tk):
         self.the_game_has_started = False
         self.sampled_questions = []
 
-        # Widgets Creation
-        self.my_frame1 = ttk.Frame(self, style="Custom.TFrame")
-        self.my_frame1.grid(row=1, column=0, sticky="wesn")
-
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
-        self.text_panel = Text(self, height=8, font=("Roboto slab", 12))
-        self.text_panel.grid(row=0, column=0,
-                             sticky="nwe", padx=20, pady=20)
+        # Widgets Creation
+        self.create_text_panel()
+        self.create_frames()
+        self.create_buttons()
+        self.create_labels()
+        self.create_style()
+        self.create_labels()
+        # Start the fun
+        self.start_question()
 
-        self.button_yes = ttk.Button(
-            self.my_frame1, text="Yes", style="Custom.TButton", command=lambda answer="Yes": self.answer_button(answer, self.button_yes, self.button_no))
-        self.button_no = ttk.Button(
-            self.my_frame1, text="No", style="Custom.TButton", command=lambda answer="No": self.answer_button(answer, self.button_no, self.button_yes))
-
-        self.button_yes.grid(row=0, column=0, sticky="we", padx=50, pady=10)
-        self.button_no.grid(row=0, column=1, sticky="ew", padx=50, pady=10)
-
-        self.Stats_label = ttk.Label(
-            self.my_frame1, text="Stats", style="Custom.TLabel")
-        self.Stats_label.grid(row=1, columnspan=2, sticky="wen", padx=100)
-
+    def create_frames(self):
+        self.my_frame1 = ttk.Frame(self, style="Custom.TFrame")
+        self.my_frame1.grid(row=1, column=0, sticky="wesn")
         self.my_frame1.grid_columnconfigure(0, weight=1)
         self.my_frame1.grid_columnconfigure(1, weight=1)
-
         self.my_frame2 = ttk.Frame(self.my_frame1, style="Custom.TFrame")
 
         self.my_frame2.grid(row=2, column=0, columnspan=3,
@@ -76,6 +69,27 @@ class Question_app(Tk):
         self.my_frame2.grid_columnconfigure(1, weight=1)
         self.my_frame2.grid_columnconfigure(2, weight=1)
 
+    def create_text_panel(self):
+        self.text_panel = Text(self, height=8, font=("Roboto slab", 12))
+        self.text_panel.grid(row=0, column=0,
+                             sticky="nwe", padx=20, pady=20)
+        self.text_panel = Text(self, height=8, font=("Roboto slab", 12))
+        self.text_panel.grid(row=0, column=0,
+                             sticky="nwe", padx=20, pady=20)
+
+    def create_labels(self):
+        self.Stats_label = ttk.Label(
+            self.my_frame1, text="Stats", style="Custom.TLabel")
+        self.Stats_label.grid(row=1, columnspan=2, sticky="wen", padx=100)
+
+    def create_buttons(self):
+        self.button_yes = ttk.Button(
+            self.my_frame1, text="Yes", style="Custom.TButton", command=lambda answer="Yes": self.answer_button(answer, self.button_yes, self.button_no))
+        self.button_no = ttk.Button(
+            self.my_frame1, text="No", style="Custom.TButton", command=lambda answer="No": self.answer_button(answer, self.button_no, self.button_yes))
+
+        self.button_yes.grid(row=0, column=0, sticky="we", padx=50, pady=10)
+        self.button_no.grid(row=0, column=1, sticky="ew", padx=50, pady=10)
         self.button_10 = ttk.Button(
             self.my_frame2, text="10 Question", style="Custom.TButton", command=lambda: self.start_with_x_questios(10))
         self.button_10.grid(row=0, column=0)
@@ -85,10 +99,6 @@ class Question_app(Tk):
         self.button_30 = ttk.Button(
             self.my_frame2, text="30 Question", style="Custom.TButton", command=lambda: self.start_with_x_questios(30))
         self.button_30.grid(row=0, column=2)
-
-        # Start the fun
-        self.create_style()
-        self.start_question()
 
     def create_style(self):
         # Styles
