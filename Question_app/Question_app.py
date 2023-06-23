@@ -115,13 +115,14 @@ class Question_app(Tk):
 
         self.correct_answers = 0
         self.question_counter = 0
+
         self.selected_questions_count = number
         self.max_row_count = number
         self.start_question()
 
     def yes_func(self):
         # Check if the answer is correct or not
-        if self.csv_data[self.random_row-1][1] == "Yes":
+        if self.sampled_questions[self.random_row-1][1] == "Yes":
             self.correct_answers += 1
             self.button_yes.configure(style="Correct.TButton")
             self.button_no.configure(style="Wrong.TButton")
@@ -131,13 +132,13 @@ class Question_app(Tk):
             self.button_no.configure(style="Correct.TButton")
         self.button_yes.configure(state=DISABLED)
         self.button_no.configure(state=DISABLED)
-        self.csv_data.pop(self.random_row-1)
+        self.sampled_questions.pop(self.random_row-1)
 
         self.after(2000, self.start_question)
 
     def no_func(self):
         # Check if the answer is correct or not
-        if self.csv_data[self.random_row-1][1] == "No":
+        if self.sampled_questions[self.random_row-1][1] == "No":
             self.correct_answers += 1
             self.button_yes.configure(style="Wrong.TButton")
             self.button_no.configure(style="Correct.TButton")
@@ -147,7 +148,7 @@ class Question_app(Tk):
             self.button_no.configure(style="Wrong.TButton")
         self.button_yes.state(["disabled"])
         self.button_no.state(["disabled"])
-        self.csv_data.pop(self.random_row-1)
+        self.sampled_questions.pop(self.random_row-1)
 
         self.after(2000, self.start_question)
 
@@ -160,19 +161,23 @@ class Question_app(Tk):
         self.update_stats()
         self.text_panel.delete("1.0", END)
         try:
-            self.row_count = sum(1 for _ in self.csv_data)
+            self.row_count = sum(1 for _ in self.sampled_questions)
             self.random_row = random.randint(1, self.row_count)
             self.text_panel.insert(
                 "1.0", f"Question number: {self.question_counter}\n")
             self.text_panel.insert(
-                "2.0", "\n"+self.csv_data[self.random_row-1][0])
+                "2.0", "\n"+self.sampled_questions[self.random_row-1][0])
 
         except:
-
-            self.text_panel.insert("1.0", "\n The questions are finished\n" +
-                                   f"You have a success rate of {self.correct_answers/self.max_row_count*100}%")
             self.button_no.state(["disabled"])
             self.button_yes.state(["disabled"])
+            if self.sampled_questions == []:
+                self.text_panel.insert(
+                    "1.0", "\n Choose one of the three categories. Thanks")
+            else:
+
+                self.text_panel.insert("1.0", "\n The questions are finished\n" +
+                                       f"You have a success rate of {self.correct_answers/self.max_row_count*100}%")
 
         self.text_panel.tag_add("center", "1.0", END)
         self.text_panel.tag_configure("center", justify="center")
