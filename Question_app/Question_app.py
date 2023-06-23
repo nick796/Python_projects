@@ -6,6 +6,17 @@ import random
 import time
 
 
+'''
+TODO: Give the user the option to select 10/20/30 questions
+TODO: Have sectors for the question(Chapter1/2/3 etc)
+TODO: Polish and create_questions
+
+TODO:(Optional) HighScore
+
+TODO:(Difficult and Optional) find a way to make it in the web 
+'''
+
+
 class Question_app(Tk):
     def __init__(self):
         super().__init__()
@@ -24,10 +35,14 @@ class Question_app(Tk):
         with open('data.csv', 'r') as file:
             self.csv_data = list(csv.reader(file))
             self.max_row_count = sum(1 for _ in self.csv_data)
-
+        # Logs for the numbers
         self.correct_answers = 0
         self.question_counter = 0
 
+        self.selected_questions_count = 0
+        self.sampled_questions = []
+
+        # Widgets Creation
         self.my_frame1 = ttk.Frame(self, style="Custom.TFrame")
         self.my_frame1.grid(row=1, column=0, sticky="wesn")
 
@@ -52,7 +67,25 @@ class Question_app(Tk):
         self.my_frame1.grid_columnconfigure(0, weight=1)
         self.my_frame1.grid_columnconfigure(1, weight=1)
 
- # Styles
+        self.my_frame2 = ttk.Frame(self.my_frame1, style="Custom.TFrame")
+
+        self.my_frame2.grid(row=2, column=0, columnspan=3,
+                            sticky="wen", pady=20)
+        self.my_frame2.grid_columnconfigure(0, weight=1)
+        self.my_frame2.grid_columnconfigure(1, weight=1)
+        self.my_frame2.grid_columnconfigure(2, weight=1)
+
+        self.button_10 = ttk.Button(
+            self.my_frame2, text="10 Question", style="Custom.TButton", command=lambda: self.start_with_x_questios(10))
+        self.button_10.grid(row=0, column=0)
+        self.button_20 = ttk.Button(
+            self.my_frame2, text="20 Question", style="Custom.TButton", command=lambda: self.start_with_x_questios(20))
+        self.button_20.grid(row=0, column=1)
+        self.button_30 = ttk.Button(
+            self.my_frame2, text="30 Question", style="Custom.TButton", command=lambda: self.start_with_x_questios(30))
+        self.button_30.grid(row=0, column=2)
+
+        # Styles
         style1 = ttk.Style()
         style1.configure("Custom.TLabel", font=(
             "Roboto slab", 13), anchor=CENTER)
@@ -72,13 +105,22 @@ class Question_app(Tk):
 
         style4 = ttk.Style()
         style4.configure("Custom.TFrame", background="#dda15e")
-        # Creating the first Frame
-        # Start the main thing
 
+        # Start the fun
+        self.start_question()
+
+    def start_with_x_questios(self, number):
+        with open('data.csv', 'r') as file:
+            self.sampled_questions = random.sample(self.csv_data, number)
+
+        self.correct_answers = 0
+        self.question_counter = 0
+        self.selected_questions_count = number
+        self.max_row_count = number
         self.start_question()
 
     def yes_func(self):
-
+        # Check if the answer is correct or not
         if self.csv_data[self.random_row-1][1] == "Yes":
             self.correct_answers += 1
             self.button_yes.configure(style="Correct.TButton")
@@ -92,10 +134,9 @@ class Question_app(Tk):
         self.csv_data.pop(self.random_row-1)
 
         self.after(2000, self.start_question)
-        # self.start_question()
 
     def no_func(self):
-
+        # Check if the answer is correct or not
         if self.csv_data[self.random_row-1][1] == "No":
             self.correct_answers += 1
             self.button_yes.configure(style="Wrong.TButton")
@@ -104,12 +145,11 @@ class Question_app(Tk):
         else:
             self.button_yes.configure(style="Correct.TButton")
             self.button_no.configure(style="Wrong.TButton")
-
-        self.csv_data.pop(self.random_row-1)
         self.button_yes.state(["disabled"])
         self.button_no.state(["disabled"])
+        self.csv_data.pop(self.random_row-1)
+
         self.after(2000, self.start_question)
-        # self.start_question()
 
     def start_question(self):
 
@@ -128,7 +168,9 @@ class Question_app(Tk):
                 "2.0", "\n"+self.csv_data[self.random_row-1][0])
 
         except:
-            self.text_panel.insert("1.0", "\n The questions are finished")
+
+            self.text_panel.insert("1.0", "\n The questions are finished\n" +
+                                   f"You have a success rate of {self.correct_answers/self.max_row_count*100}%")
             self.button_no.state(["disabled"])
             self.button_yes.state(["disabled"])
 
@@ -139,8 +181,6 @@ class Question_app(Tk):
         self.button_no.configure(style="Custom.TButton")
 
     def update_stats(self):
-        # self.text_panel.insert(
-        #     "1.0", f"Question number: {self.question_counter}\n")
         self.Stats_label.configure(
             text=f"Correct {self.correct_answers}/{self.max_row_count}")
 
